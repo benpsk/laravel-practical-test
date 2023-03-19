@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
-use App\Models\User;
 use App\Services\AuthService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -40,5 +38,15 @@ class AuthController extends Controller
         $data = $request->only('name', 'email', 'password');
 
         return $this->service->store($data);
+    }
+
+    public function logout(Request $request)
+    {
+        $user = request()->user();
+        // Revoke all tokens...
+        $user->tokens()->delete();
+
+        $response = ['message' => 'logout successful.'];
+        return $this->service->formatter()->make($response);
     }
 }

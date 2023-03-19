@@ -26,5 +26,7 @@ Route::prefix('v1')->group(function () {
 
         Route::apiResource('user', UserController::class)->only('index');
         Route::apiResource('survey', SurveyFormController::class)->only(['index', 'store']);
+
+        Route::post('logout', [AuthController::class, 'logout']);
     });
 });

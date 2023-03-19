@@ -7,6 +7,7 @@ use App\Api\Exceptions\NotFoundException;
 use App\Api\Exceptions\ValidationException;
 use App\Api\Exceptions\WrongCredentialException;
 use App\Api\Service\Formatter;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException as ValidationValidationException;
@@ -75,6 +76,8 @@ class Handler extends ExceptionHandler
                 if ($exception instanceof NotFoundException) {
                     $code = 404;
                     $message = "You requested route not found.";
+                } elseif ($exception instanceof AuthenticationException) {
+                    $code = 401;
                 } elseif ($exception instanceof ValidationException) {
                     $code = 400;
                 } elseif ($exception instanceof MethodNotAllowedException) {
@@ -114,5 +117,4 @@ class Handler extends ExceptionHandler
 
         return response()->json($error);
     }
-
 }
