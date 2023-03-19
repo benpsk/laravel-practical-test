@@ -6,10 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use SebastianBergmann\Type\VoidType;
 use Tests\TestCase;
-
-use function PHPUnit\Framework\assertJson;
 
 class AuthTest extends TestCase
 {

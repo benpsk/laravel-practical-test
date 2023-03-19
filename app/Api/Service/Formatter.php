@@ -2,63 +2,67 @@
 
 namespace App\Api\Service;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Request;
 
 class Formatter
 {
-    /**
-     * This variable is used to set data count
-     *
-     * @var
-     */
-    protected $count;
 
     /**
-     * @var
+     * @var int
      */
-    protected $total;
+    protected int $count;
 
     /**
-     * @var
+     * @var int
      */
-    protected $method;
+    protected int $total;
 
     /**
-     * @var
+     * @var string
      */
-    protected $message;
+    protected string $method;
+
+    /**
+     * @var string
+     */
+    protected string $message;
 
     /**
      * @var array
      */
-    protected $meta = [];
+    protected array $meta = [];
 
     /**
      * @var int
      */
-    protected $limit = 30;
+    protected int $limit = 30;
 
     /**
      * @var int
      */
-    protected $success = 1;
+    protected int $success = 1;
 
     /**
      * @var int
      */
-    protected $status = 200;
+    protected int $status = 200;
 
     /**
-     * @var null
+     * @var string|null
      */
-    protected $time = null;
+    protected ?string $time = null;
+
     /**
      * @var
      */
     public static $instance;
 
 
-    protected $endpoint = null;
+    /**
+     * @var string|null
+     */
+    protected ?string $endpoint = null;
 
 
     /**
@@ -66,7 +70,7 @@ class Formatter
      *
      * @return Formatter
      */
-    public static function factory()
+    public static function factory(): Formatter
     {
         if (!(self::$instance instanceof self)) {
             self::$instance = new self();
@@ -79,7 +83,12 @@ class Formatter
         return self::$instance;
     }
 
-    public function make($data, $status = null)
+    /**
+     * @param $data
+     * @param $status
+     * @return JsonResponse
+     */
+    public function make($data, $status = null): JsonResponse
     {
         $response = $this->defaultFormat();
 
@@ -90,7 +99,12 @@ class Formatter
     }
 
 
-    public function authResponse(string $token, $data = [])
+    /**
+     * @param string $token
+     * @param $data
+     * @return JsonResponse
+     */
+    public function authResponse(string $token, $data = []): JsonResponse
     {
         $response = $this->defaultFormat();
         $response["token"] = $this->tokenInfo($token);
@@ -105,7 +119,7 @@ class Formatter
      * @param $token
      * @return array
      */
-    public function tokenInfo($token)
+    public function tokenInfo($token): array
     {
         return [
             "type" => "Bearer",
@@ -117,7 +131,7 @@ class Formatter
     /**
      * @return string
      */
-    protected function getMethod()
+    protected function getMethod(): string
     {
         $method = Request::method();
         $this->method = $method;
@@ -128,7 +142,7 @@ class Formatter
     /**
      * @return string
      */
-    protected function getEndpoint()
+    protected function getEndpoint(): string
     {
         $endpoint = Request::path();
         $this->endpoint = $endpoint;
@@ -139,18 +153,20 @@ class Formatter
     /**
      * @return array
      */
-    protected function defaultFormat()
+    protected function defaultFormat(): array
     {
-        $format = [
+        return [
             "success" => $this->success,
             "status" => $this->status,
             "meta" => $this->getMeta(),
         ];
 
-        return $format;
     }
 
-    public function getMeta()
+    /**
+     * @return array
+     */
+    public function getMeta(): array
     {
         return [
             'method' => $this->getMethod(),
@@ -163,7 +179,7 @@ class Formatter
      * @param $code
      * @return array
      */
-    public function makeErrorException($exception, $code)
+    public function makeErrorException($exception, $code): array
     {
         $this->success = 0;
         $this->status = 500;
@@ -189,14 +205,18 @@ class Formatter
      * @param int $status
      * @return $this
      */
-    public function setStatus(int $status)
+    public function setStatus(int $status): static
     {
         $this->status = $status;
         return $this;
     }
 
 
-    public function extraField($fields =  [])
+    /**
+     * @param $fields
+     * @return $this
+     */
+    public function extraField($fields =  []): static
     {
         $i = 0;
         foreach ($fields as $key => $value) {

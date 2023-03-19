@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Api\Exceptions\WrongCredentialException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Services\AuthService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-
     /**
      * @param AuthService $service
      */
@@ -21,8 +22,10 @@ class AuthController extends Controller
 
     /**
      * @param LoginUserRequest $request
+     * @return JsonResponse
+     * @throws WrongCredentialException
      */
-    public function login(LoginUserRequest $request)
+    public function login(LoginUserRequest $request): JsonResponse
     {
         $credentials = $request->only('email', 'password');
 
@@ -31,18 +34,22 @@ class AuthController extends Controller
 
     /**
      * @param StoreUserRequest $request
-     * @return mixed
+     * @return JsonResponse
      */
-    public function store(StoreUserRequest $request): mixed
+    public function store(StoreUserRequest $request): JsonResponse
     {
         $data = $request->only('name', 'email', 'password');
 
         return $this->service->store($data);
     }
 
-    public function logout(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function logout(Request $request): JsonResponse
     {
-        $user = request()->user();
+        $user = $request->user();
         // Revoke all tokens...
         $user->tokens()->delete();
 

@@ -9,10 +9,17 @@ use App\Http\Resources\SurveyFormResource;
 use App\Http\Resources\UserSurveyResource;
 use App\Models\SurveyForm;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Throwable;
+
 class SurveyFormService extends CommonService
 {
 
-    public function get()
+    /**
+     * @return JsonResponse
+     * @throws FatalErrorException
+     */
+    public function get(): JsonResponse
     {
         try {
             $data = User::auth()->load('surveyForm');
@@ -21,13 +28,18 @@ class SurveyFormService extends CommonService
                 new UserSurveyResource($data),
                 200
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             logger()->debug($e->getMessage() . $e->getLine() . ' ----- ' . $e->getFile());
             throw new FatalErrorException($e->getMessage());
         }
     }
 
-    public function store($data)
+    /**
+     * @param $data
+     * @return JsonResponse
+     * @throws FatalErrorException
+     */
+    public function store($data): JsonResponse
     {
         try {
             $user = User::auth();
@@ -46,7 +58,7 @@ class SurveyFormService extends CommonService
                 new SurveyFormResource($survey),
                 201
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             logger()->debug($e->getMessage() . $e->getLine() . ' ----- ' . $e->getFile());
             throw new FatalErrorException($e->getMessage());
         }

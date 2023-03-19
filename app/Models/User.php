@@ -11,6 +11,8 @@ use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @method static pluck(string $string)
+ * @method static create(array $array)
+ * @method static find(int|string|null $id)
  */
 class User extends Authenticatable
 {
@@ -54,11 +56,13 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($pass);
     }
 
-    public static function auth()
+    /**
+     * @return User
+     */
+    public static function auth(): User
     {
         return User::find(Auth::id());
     }
-
 
     public function surveyForm()
     {

@@ -9,8 +9,10 @@ use App\Api\Exceptions\WrongCredentialException;
 use App\Api\Service\Formatter;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException as ValidationValidationException;
+use PDOException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Throwable;
 
@@ -19,7 +21,7 @@ class Handler extends ExceptionHandler
     /**
      * A list of exception types with their corresponding custom log levels.
      *
-     * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
+     * @var array<class-string<Throwable>, \Psr\Log\LogLevel::*>
      */
     protected $levels = [
         //
@@ -28,7 +30,7 @@ class Handler extends ExceptionHandler
     /**
      * A list of the exception types that are not reported.
      *
-     * @var array<int, class-string<\Throwable>>
+     * @var array<int, class-string<Throwable>>
      */
     protected $dontReport = [
         //
@@ -57,7 +59,7 @@ class Handler extends ExceptionHandler
         $this->renderable(function (Throwable $exception, Request $request) {
 
             if (!config('app.debug')) {
-                if ($exception instanceof \PDOException) {
+                if ($exception instanceof PDOException) {
                     logger()->error($exception);
                     return response(
                         [
@@ -85,6 +87,8 @@ class Handler extends ExceptionHandler
                 } elseif ($exception instanceof ValidationValidationException) {
                     $message = json_encode($exception->errors());
                     $code = 422;
+                } elseif ($exception instanceof WrongCredentialException) {
+                    $code = 401;
                 } elseif ($exception instanceof FatalErrorException) {
                     $code = 500;
                     if (!config('app.debug')) {
@@ -96,15 +100,13 @@ class Handler extends ExceptionHandler
         });
     }
 
+
     /**
-     * Handle the exception for json response
-     *
      * @param $message
      * @param $code
-     * @param $exceptions
-     * @return JsonResponse|object
+     * @return JsonResponse
      */
-    private function handle($message, $code)
+    private function handle($message, $code): JsonResponse
     {
         $error = Formatter::factory()->makeErrorException($message, $code);
         logger()->debug($message);

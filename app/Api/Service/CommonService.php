@@ -7,7 +7,7 @@ class CommonService
     /**
      * @return Formatter
      */
-    public function formatter()
+    public function formatter(): Formatter
     {
         return Formatter::factory();
     }

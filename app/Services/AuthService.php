@@ -6,6 +6,7 @@ use App\Api\Exceptions\WrongCredentialException;
 use App\Api\Service\CommonService;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class AuthService extends CommonService
@@ -13,8 +14,10 @@ class AuthService extends CommonService
 
     /**
      * @param $credentials
+     * @return JsonResponse
+     * @throws WrongCredentialException
      */
-    public function login($credentials)
+    public function login($credentials): JsonResponse
     {
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
@@ -34,8 +37,9 @@ class AuthService extends CommonService
 
     /**
      * @param $data
+     * @return JsonResponse
      */
-    public function store($data)
+    public function store($data): JsonResponse
     {
         $user = User::create([
             'name' => $data['name'],
