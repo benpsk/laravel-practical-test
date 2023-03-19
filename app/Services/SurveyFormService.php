@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Api\Exceptions\FatalErrorException;
 use App\Api\Service\CommonService;
+use App\Events\SurveyFormCreated;
 use App\Http\Resources\SurveyFormResource;
 use App\Http\Resources\UserSurveyResource;
 use App\Models\SurveyForm;
@@ -37,6 +38,8 @@ class SurveyFormService extends CommonService
             ]);
 
             $user->surveyForm()->save($survey);
+
+            SurveyFormCreated::dispatch($survey);
 
             return $this->formatter()->make(
                 new SurveyFormResource($survey)
