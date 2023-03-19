@@ -124,7 +124,7 @@ class Formatter
         return [
             "type" => "Bearer",
             "access_token" => $token,
-            "expired_at" => null
+            "expired_at" => config('sanctum.expiration') * 60
         ];
     }
 
