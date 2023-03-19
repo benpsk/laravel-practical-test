@@ -13,4 +13,10 @@ class SurveyForm extends Model
      * @var string[]
      */
     protected $fillable = ['name', 'phone_no', 'dob', 'gender', 'user_id'];
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

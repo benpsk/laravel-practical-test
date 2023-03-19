@@ -52,4 +52,10 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($pass);
     }
+
+
+    public function surveyForm()
+    {
+        return $this->hasMany(SurveyForm::class);
+    }
 }

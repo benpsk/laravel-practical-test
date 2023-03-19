@@ -3,16 +3,25 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Services\SurveyFormService;
 use Illuminate\Http\Request;
 
 class SurveyFormController extends Controller
 {
     /**
+     * @param SurveyFormService $service
+     */
+    public function __construct(
+        protected SurveyFormService $service
+    ) {
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return $this->service->get();
     }
 
     /**
