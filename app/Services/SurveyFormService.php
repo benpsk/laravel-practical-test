@@ -18,7 +18,8 @@ class SurveyFormService extends CommonService
             $data = User::auth()->load('surveyForm');
 
             return $this->formatter()->make(
-                new UserSurveyResource($data)
+                new UserSurveyResource($data),
+                200
             );
         } catch (\Throwable $e) {
             logger()->debug($e->getMessage() . $e->getLine() . ' ----- ' . $e->getFile());
@@ -42,7 +43,8 @@ class SurveyFormService extends CommonService
             SurveyFormCreated::dispatch($survey);
 
             return $this->formatter()->make(
-                new SurveyFormResource($survey)
+                new SurveyFormResource($survey),
+                201
             );
         } catch (\Throwable $e) {
             logger()->debug($e->getMessage() . $e->getLine() . ' ----- ' . $e->getFile());

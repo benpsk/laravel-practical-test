@@ -43,7 +43,8 @@ class AuthService extends CommonService
             'password' => $data['password'],
         ]);
 
-        return $this->formatter()->make(new UserResource($user));
+        return $this->formatter()
+        ->make(new UserResource($user), 201);
 
     }
 }

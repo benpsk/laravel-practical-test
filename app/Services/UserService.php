@@ -12,6 +12,7 @@ class UserService extends CommonService
      */
     public function get($user)
     {
-        return $this->formatter()->make(new UserResource($user));
+        return $this->formatter()
+            ->make(new UserResource($user), 200);
     }
 }

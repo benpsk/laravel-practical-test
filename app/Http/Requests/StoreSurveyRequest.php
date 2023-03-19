@@ -27,7 +27,7 @@ class StoreSurveyRequest extends FormRequest
             'name' => 'required|max:20',
             'phone_no' => ['required'],
             'gender' => ['nullable', Rule::in(['Male', 'Female']),],
-            'dob' => ['nullable', 'date', 'before_or_equal:' . Carbon::now()->format('Y-m-d'),],
+            'dob' => ['required', 'date', 'before_or_equal:' . Carbon::now()->format('Y-m-d'),],
         ];
     }
 }

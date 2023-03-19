@@ -72,19 +72,21 @@ class Formatter
             self::$instance = new self();
             $method = self::$instance->getMethod();
             if ($method === 'post') {
-                self::$instance->status = 201;
+                self::$instance->status = 200;
             }
         }
 
         return self::$instance;
     }
 
-    public function make($data)
+    public function make($data, $status = null)
     {
         $response = $this->defaultFormat();
 
         $response["data"] = $data;
-        return $response;
+
+        return response()
+        ->json($response, $status ?? $this->status);
     }
 
 
@@ -190,7 +192,6 @@ class Formatter
     public function setStatus(int $status)
     {
         $this->status = $status;
-
         return $this;
     }
 

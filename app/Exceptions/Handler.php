@@ -84,13 +84,14 @@ class Handler extends ExceptionHandler
                     $code = 405;
                 } elseif ($exception instanceof ValidationValidationException) {
                     $message = json_encode($exception->errors());
+                    $code = 422;
                 } elseif ($exception instanceof FatalErrorException) {
+                    $code = 500;
                     if (!config('app.debug')) {
                         $message = 'Internal Server Error.';
                     }
                 }
-
-                return $this->handle($message, $code, $exception);
+                return $this->handle($message, $code);
             }
         });
     }
@@ -103,18 +104,11 @@ class Handler extends ExceptionHandler
      * @param $exceptions
      * @return JsonResponse|object
      */
-    private function handle($message, $code, $exceptions)
+    private function handle($message, $code)
     {
         $error = Formatter::factory()->makeErrorException($message, $code);
+        logger()->debug($message);
 
-        if ($code === 403 || $code === 401) {
-            if (!$exceptions instanceof WrongCredentialException) {
-                return response()->json($error)->setStatusCode($code);
-            }
-        } elseif ($code !== 400) {
-            logger()->debug($message);
-        }
-
-        return response()->json($error);
+        return response()->json($error)->setStatusCode($code);
     }
 }

@@ -47,6 +47,7 @@ class AuthController extends Controller
         $user->tokens()->delete();
 
         $response = ['message' => 'logout successful.'];
-        return $this->service->formatter()->make($response);
+        return $this->service->formatter()
+        ->make($response, 200);
     }
 }
