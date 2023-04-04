@@ -2,6 +2,8 @@
 
 To enable email notifications, it is necessary to configure a queue for the associated events to function properly.
 
+- In this sample project, instead of using the Laravel eloquent resources, I've built the custom API format.
+
 
 ## Api Documentation
 
