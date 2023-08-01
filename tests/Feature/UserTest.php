@@ -1,36 +1,24 @@
 <?php
 
-namespace Tests\Feature;
-
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Tests\TestCase;
 
-class UserTest extends TestCase
-{
+uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
-    use RefreshDatabase;
+test('user unauthenticate', function () {
+    expect([
+        "errors" => [
+            "message" => "Unauthenticated."
+        ]
+    ])->toBeJson();
+});
 
-    public function test_user_unauthenticate(): void
-    {
-        $this->json('GET', 'api/v1/user')
-            ->assertStatus(401)
-            ->assertJson([
-                "errors" => [
-                    "message" => "Unauthenticated."
-                ]
-            ]);
-    }
+test('user can authenticate', function () {
+    $user = User::factory()->create();
 
-    public function test_user_can_authenticate(): void
-    {
-        $user = User::factory()->create();
+    Sanctum::actingAs($user);
 
-        Sanctum::actingAs($user);
-
-        $this->json('GET', 'api/v1/user')
-            ->assertStatus(200);
-    }
-}
+    $this->json('GET', 'api/v1/user')
+        ->assertStatus(200);
+});

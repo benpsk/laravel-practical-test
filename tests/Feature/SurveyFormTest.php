@@ -1,69 +1,51 @@
 <?php
 
-namespace Tests\Feature;
-
 use App\Models\SurveyForm;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Tests\TestCase;
 
-class SurveyFormTest extends TestCase
-{
-    use RefreshDatabase;
+uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
-    protected $user;
+beforeEach(function () {
+    $this->user = User::factory()->create();
+    Sanctum::actingAs($this->user);
+});
 
-    public function setUp(): void
-    {
-        parent::setUp();
+test('can get survey form listing', function () {
+    SurveyForm::factory(10)->create([
+        'user_id' => $this->user->id
+    ]);
 
-        $this->user = User::factory()->create();
-        Sanctum::actingAs($this->user);
-    }
+    $response = $this->json('GET', 'api/v1/survey')
+        ->assertStatus(200);
 
+    $response->assertJsonCount(10, 'data.survey_form');
+});
 
-    public function test_can_get_survey_form_listing(): void
-    {
-        SurveyForm::factory(10)->create([
-            'user_id' => $this->user->id
-        ]);
+test('user fail store survey', function () {
+    $user = [
+        'name' => 'John Doe',
+        'dob' => '2023-01-10'
+    ];
 
-        $response = $this->json('GET', 'api/v1/survey')
-            ->assertStatus(200);
+    expect([
+        "errors" => [
+            "phone_no" => [
+                "The phone no field is required."
+            ]
+        ]
+    ])->toBeJson();
+});
 
-        $response->assertJsonCount(10, 'data.survey_form');
-    }
+test('user can store survey', function () {
+    $user = [
+        'name' => 'John Doe',
+        'phone_no' => '+959453340064',
+        'gender' => 'Male',
+        'dob' => '2023-01-10'
+    ];
 
-    public function test_user_fail_store_survey(): void
-    {
-        $user = [
-            'name' => 'John Doe',
-            'dob' => '2023-01-10'
-        ];
-
-        $this->json('POST', 'api/v1/survey', $user)
-            ->assertStatus(422)
-            ->assertJson([
-                "errors" => [
-                    "phone_no" => [
-                        "The phone no field is required."
-                    ]
-                ]
-            ]);
-    }
-
-    public function test_user_can_store_survey(): void
-    {
-        $user = [
-            'name' => 'John Doe',
-            'phone_no' => '+959453340064',
-            'gender' => 'Male',
-            'dob' => '2023-01-10'
-        ];
-
-        $this->json('POST', 'api/v1/survey', $user)
-            ->assertStatus(201);
-    }
-}
+    $this->json('POST', 'api/v1/survey', $user)
+        ->assertStatus(201);
+});
