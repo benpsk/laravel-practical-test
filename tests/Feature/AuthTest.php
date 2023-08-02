@@ -11,7 +11,8 @@ test('login fail validation', function () {
         'email' => 'bengunn',
         'password' => 'dddddd'
     ];
-    $response = $this->json('POST', 'api/v1/login', $data);
+
+    $this->json('POST', 'api/v1/login', $data);
 
     expect(
         '{
@@ -52,16 +53,27 @@ test('user fail register', function () {
         'password_confirmation' => 'Padkdkd'
     ];
 
-    expect([
-        "errors" => [
-            "email" => [
-                "The email field must be a valid email address."
-            ],
-            "password" => [
-                "The password field confirmation does not match."
-            ],
-        ]
-    ])->toBeJson();
+    $this->json('POST', 'api/v1/register', $data)
+        ->assertStatus(422);
+
+    expect(
+        '{
+            "success":0,
+            "status":422,
+            "meta":{
+                "method":"post",
+                "endpoint":"api/v1/register"
+            },
+            "errors":{
+                "email":[
+                    "The email field must be a valid email address."
+                ],
+                "password":[
+                    "The password field confirmation does not match."
+                ]
+            }
+        }'
+    )->toBeJson();
 });
 
 test('user can register', function () {
@@ -81,7 +93,18 @@ test('user can logout', function () {
 
     Sanctum::actingAs($user);
 
-    expect([
-        "data" => ["message" => "logout successful."]
-    ])->toBeJson();
+    $this->json('POST', 'api/v1/logout')
+    ->assertStatus(200);
+
+    expect(
+        '{
+            "success":1,
+            "status":200,
+            "meta":{
+                "method":"post",
+                "endpoint":"api/v1/logout"
+            },
+            "data": {"message": "logout successful."}
+        }'
+    )->toBeJson();
 });
