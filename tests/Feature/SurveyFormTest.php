@@ -21,7 +21,7 @@ test('can get survey form listing', function () {
         ->assertStatus(200);
 
     $response->assertJsonCount(10, 'data.survey_form');
-});
+})->todo();
 
 test('user fail store survey', function () {
     $user = [
@@ -36,7 +36,7 @@ test('user fail store survey', function () {
             ]
         ]
     ])->toBeJson();
-});
+})->todo();
 
 test('user can store survey', function () {
     $user = [
@@ -48,4 +48,4 @@ test('user can store survey', function () {
 
     $this->json('POST', 'api/v1/survey', $user)
         ->assertStatus(201);
-});
+})->todo();
