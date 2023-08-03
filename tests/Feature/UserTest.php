@@ -1,18 +1,22 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
-test('user unauthenticate', function () {
+test('user un-authenticate', function () {
+
+    $this->json('GET', 'api/v1/user')
+        ->assertStatus(401);
+
     expect([
         "errors" => [
             "message" => "Unauthenticated."
         ]
-    ])->toBeJson();
-})->todo();
+    ])->toBeArray();
+});
 
 test('user can authenticate', function () {
     $user = User::factory()->create();
@@ -21,4 +25,4 @@ test('user can authenticate', function () {
 
     $this->json('GET', 'api/v1/user')
         ->assertStatus(200);
-})->todo();
+});

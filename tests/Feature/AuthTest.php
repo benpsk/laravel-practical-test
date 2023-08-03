@@ -1,10 +1,10 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('login fail validation', function () {
     $data = [
@@ -56,24 +56,17 @@ test('user fail register', function () {
     $this->json('POST', 'api/v1/register', $data)
         ->assertStatus(422);
 
-    expect(
-        '{
-            "success":0,
-            "status":422,
-            "meta":{
-                "method":"post",
-                "endpoint":"api/v1/register"
-            },
-            "errors":{
-                "email":[
+    expect([
+            "errors" => [
+                "email" => [
                     "The email field must be a valid email address."
                 ],
-                "password":[
+                "password" => [
                     "The password field confirmation does not match."
-                ]
-            }
-        }'
-    )->toBeJson();
+                ],
+            ]
+        ]
+    )->toBeArray();
 });
 
 test('user can register', function () {
@@ -96,15 +89,8 @@ test('user can logout', function () {
     $this->json('POST', 'api/v1/logout')
     ->assertStatus(200);
 
-    expect(
-        '{
-            "success":1,
-            "status":200,
-            "meta":{
-                "method":"post",
-                "endpoint":"api/v1/logout"
-            },
-            "data": {"message": "logout successful."}
-        }'
-    )->toBeJson();
+    expect([
+            "data" => ["message" => "logout successful."]
+        ]
+    )->toBeArray();
 });

@@ -2,10 +2,10 @@
 
 use App\Models\SurveyForm;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -21,13 +21,15 @@ test('can get survey form listing', function () {
         ->assertStatus(200);
 
     $response->assertJsonCount(10, 'data.survey_form');
-})->todo();
+});
 
 test('user fail store survey', function () {
     $user = [
         'name' => 'John Doe',
         'dob' => '2023-01-10'
     ];
+    $this->json('POST', 'api/v1/survey', $user)
+        ->assertStatus(422);
 
     expect([
         "errors" => [
@@ -35,8 +37,8 @@ test('user fail store survey', function () {
                 "The phone no field is required."
             ]
         ]
-    ])->toBeJson();
-})->todo();
+    ])->toBeArray();
+});
 
 test('user can store survey', function () {
     $user = [
@@ -48,4 +50,4 @@ test('user can store survey', function () {
 
     $this->json('POST', 'api/v1/survey', $user)
         ->assertStatus(201);
-})->todo();
+});
