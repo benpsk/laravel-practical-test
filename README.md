@@ -22,7 +22,8 @@ To enable email notifications, it is necessary to configure a queue for the asso
     "status": 200,
     "meta": {
         "method": "get",
-        "endpoint": "api/v1/user"
+        "endpoint": "api/v1/user",
+        "duration": 7.01
     },
     "data": {
         "id": 21,
@@ -41,7 +42,8 @@ To enable email notifications, it is necessary to configure a queue for the asso
     "status": 401,
     "meta": {
         "method": "post",
-        "endpoint": "api/v1/login"
+        "endpoint": "api/v1/login",
+        "duration": 7.01
     },
     "errors": {
         "message": "Invalid credentials"
@@ -54,7 +56,8 @@ To enable email notifications, it is necessary to configure a queue for the asso
     "status": 422,
     "meta": {
         "method": "post",
-        "endpoint": "api/v1/register"
+        "endpoint": "api/v1/register",
+        "duration": 7.01
     },
     "errors": {
         "email": [
@@ -90,7 +93,8 @@ Authentication      Not Required
     "status": 200,
     "meta": {
         "method": "post",
-        "endpoint": "api/v1/register"
+        "endpoint": "api/v1/register",
+        "duration": 7.01
     },
     "data": {
         "id": 21,
@@ -124,7 +128,8 @@ Authentication      Not Required
     "status": 200,
     "meta": {
         "method": "post",
-        "endpoint": "api/v1/login"
+        "endpoint": "api/v1/login",
+        "duration": 7.01
     },
     "token": {
         "type": "Bearer",
@@ -157,7 +162,8 @@ Authentication      Required
     "status": 200,
     "meta": {
         "method": "post",
-        "endpoint": "api/v1/logout"
+        "endpoint": "api/v1/logout",
+        "duration": 7.01
     },
     "data": {
         "message": "logout successful."
@@ -180,7 +186,8 @@ Parameters -
     "status": 200,
     "meta": {
         "method": "get",
-        "endpoint": "api/v1/user"
+        "endpoint": "api/v1/user",
+        "duration": 7.01
     },
     "data": {
         "id": 21,
@@ -215,7 +222,8 @@ Authentication      Required
     "status": 200,
     "meta": {
         "method": "post",
-        "endpoint": "api/v1/survey"
+        "endpoint": "api/v1/survey",
+        "duration": 7.01
     },
     "data": {
         "id": 103,
@@ -244,7 +252,8 @@ Parameters -
     "status": 200,
     "meta": {
         "method": "get",
-        "endpoint": "api/v1/survey"
+        "endpoint": "api/v1/survey",
+        "duration": 7.01
     },
     "data": {
         "id": 21,
