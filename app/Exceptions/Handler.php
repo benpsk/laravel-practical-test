@@ -10,9 +10,9 @@ use App\Api\Service\Formatter;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException as ValidationValidationException;
 use PDOException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Throwable;
 
@@ -52,65 +52,60 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-
-        $this->reportable(function (Throwable $exception) {
+        $this->renderable(function (MethodNotAllowedHttpException $e) {
+            return $this->handle($e->getMessage(), 405);
         });
 
-        $this->renderable(function (Throwable $exception, Request $request) {
+        $this->renderable(function (NotFoundException $e) {
+            return $this->handle($e->getMessage(), 404);
+        });
 
-            if (!config('app.debug')) {
-                if ($exception instanceof PDOException) {
-                    logger()->error($exception);
-                    return response(
-                        [
-                            'title' => 'Service Temporarily Unavailable!',
-                            'description' => 'We are experiencing technical difficulties. We will return shortly.'
-                        ],
-                        503
-                    );
-                }
-            }
-            if ($request->wantsJson()) {
-                $message = $exception->getMessage();
+        $this->renderable(function (AuthenticationException $e) {
+            return $this->handle($e->getMessage(), 401);
+        });
+        $this->renderable(function (ValidationException $e) {
+            return $this->handle($e->getMessage(), 400);
+        });
+        $this->renderable(function (MethodNotAllowedException $e) {
+            return $this->handle($e->getMessage(), 405);
+        });
 
-                $code = $exception->getCode();
+        $this->renderable(function (ValidationValidationException $e) {
+            return $this->handle(json_encode($e->errors()), 422);
+        });
+        $this->renderable(function (WrongCredentialException $e) {
+            return $this->handle($e->getMessage(), 401);
+        });
 
-                if ($exception instanceof NotFoundException) {
-                    $code = 404;
-                    $message = "You requested route not found.";
-                } elseif ($exception instanceof AuthenticationException) {
-                    $code = 401;
-                } elseif ($exception instanceof ValidationException) {
-                    $code = 400;
-                } elseif ($exception instanceof MethodNotAllowedException) {
-                    $code = 405;
-                } elseif ($exception instanceof ValidationValidationException) {
-                    $message = json_encode($exception->errors());
-                    $code = 422;
-                } elseif ($exception instanceof WrongCredentialException) {
-                    $code = 401;
-                } elseif ($exception instanceof FatalErrorException) {
-                    $code = 500;
-                    if (!config('app.debug')) {
-                        $message = 'Internal Server Error.';
-                    }
-                }
-                return $this->handle($message, $code);
-            }
+        $this->renderable(function (FatalErrorException $e) {
+            return $this->handle($e->getMessage(), 500);
+        });
+
+        $this->renderable(function (PDOException $e) {
+            logger()->debug($e->getMessage());
+            return response(
+                [
+                    'title' => 'Service Temporarily Unavailable!',
+                    'description' => 'We are experiencing technical difficulties. We will return shortly.'
+                ],
+                503
+            );
+        });
+
+
+        $this->renderable(function (Throwable $e) {
+            return $this->handle($e->getMessage(), 500);
         });
     }
 
-
-    /**
-     * @param $message
-     * @param $code
-     * @return JsonResponse
-     */
-    private function handle($message, $code): JsonResponse
+    private function handle($message, $code): bool|JsonResponse
     {
-        $error = Formatter::factory()->makeErrorException($message, $code);
-        logger()->debug($message);
+        if (request()->wantsJson()) {
+            $error = Formatter::factory()->makeErrorException($message, $code);
+            logger()->debug($message);
 
-        return response()->json($error)->setStatusCode($code);
+            return response()->json($error)->setStatusCode($code);
+        }
+        return false;
     }
 }
