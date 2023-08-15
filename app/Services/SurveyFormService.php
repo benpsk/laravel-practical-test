@@ -24,10 +24,11 @@ class SurveyFormService extends CommonService
         try {
             $data = User::auth()->load('surveyForm');
 
-            return $this->formatter()->make(
-                new UserSurveyResource($data),
-                200
-            );
+            return response()->json(new UserSurveyResource($data), 200);
+//            return $this->formatter()->make(
+//                new UserSurveyResource($data),
+//                200
+//            );
         } catch (Throwable $e) {
             logger()->debug($e->getMessage() . $e->getLine() . ' ----- ' . $e->getFile());
             throw new FatalErrorException($e->getMessage());
