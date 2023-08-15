@@ -48,10 +48,6 @@ class Formatter
      */
     protected int $status = 200;
 
-    /**
-     * @var string|null
-     */
-    protected ?string $time = null;
 
     /**
      * @var
@@ -66,6 +62,10 @@ class Formatter
 
 
     protected ?string $token = null;
+
+    protected float $start = 0;
+
+    protected int $end = 0;
 
     /**
      * Singleton
@@ -99,7 +99,6 @@ class Formatter
         if ($this->token) $response["token"] = $this->tokenInfo();
 
         $response["data"] = $data;
-
 
         return response()
         ->json($response, $this->status);
@@ -160,7 +159,14 @@ class Formatter
         return [
             'method' => $this->getMethod(),
             'endpoint' => $this->getEndpoint(),
+            'duration' => $this->getDuration()
         ];
+    }
+
+    protected function getDuration(): float
+    {
+        $end = microtime(true);
+        return round(($end - $this->start) * 1000, 2);
     }
 
     /**
@@ -200,6 +206,12 @@ class Formatter
         return $this;
     }
 
+    public function setStart(float $start): static
+    {
+        $this->start = $start;
+        return $this;
+    }
+
     public function setToken(string $token): static
     {
         $this->token = $token;
@@ -220,13 +232,5 @@ class Formatter
             $i++;
         }
         return $this;
-    }
-
-    protected function __clone()
-    {
-    }
-
-    protected function __construct()
-    {
     }
 }

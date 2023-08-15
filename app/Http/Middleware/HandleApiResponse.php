@@ -12,6 +12,8 @@ class HandleApiResponse
 {
     public function handle(Request $request, Closure $next): Response
     {
+        $start = microtime(true);
+
         $response = $next($request);
 
         if ($response instanceof JsonResponse && $request->expectsJson() && $response->isSuccessful()) {
@@ -19,7 +21,7 @@ class HandleApiResponse
             $statusCode = $response->getStatusCode();
 
             $data = $response->getData();
-            return Formatter::factory()->make($data, $statusCode);
+            return Formatter::factory()->setStart($start)->make($data, $statusCode);
 
         }
 
