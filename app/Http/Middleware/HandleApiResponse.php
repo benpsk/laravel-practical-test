@@ -13,6 +13,7 @@ class HandleApiResponse
     public function handle(Request $request, Closure $next): Response
     {
         $start = microtime(true);
+        $api = Formatter::factory()->setStart($start);
 
         $response = $next($request);
 
@@ -21,7 +22,7 @@ class HandleApiResponse
             $statusCode = $response->getStatusCode();
 
             $data = $response->getData();
-            return Formatter::factory()->setStart($start)->make($data, $statusCode);
+            return $api->make($data, $statusCode);
 
         }
 
