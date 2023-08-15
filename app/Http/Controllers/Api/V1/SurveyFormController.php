@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Api\Exceptions\FatalErrorException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSurveyRequest;
+use App\Http\Resources\SurveyFormResource;
+use App\Http\Resources\UserSurveyResource;
 use App\Services\SurveyFormService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,7 +27,8 @@ class SurveyFormController extends Controller
      */
     public function index(): JsonResponse
     {
-        return $this->service->get();
+        $data = $this->service->get();
+        return response()->json(new UserSurveyResource($data));
     }
 
     /**
@@ -34,7 +37,8 @@ class SurveyFormController extends Controller
      */
     public function store(StoreSurveyRequest $request): JsonResponse
     {
-        return $this->service->store($request->validated());
+        $survey = $this->service->store($request->validated());
+        return response()->json(new SurveyFormResource($survey), 201);
     }
 
     /**

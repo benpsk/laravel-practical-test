@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Services\UserService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -18,12 +18,10 @@ class UserController extends Controller
     ) {
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request): JsonResponse
+
+    public function index(Request $request): UserResource
     {
-        return $this->service->get($request->user());
+        return new UserResource($request->user());
     }
 
     /**

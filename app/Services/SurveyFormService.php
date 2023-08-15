@@ -3,32 +3,22 @@
 namespace App\Services;
 
 use App\Api\Exceptions\FatalErrorException;
-use App\Api\Service\CommonService;
 use App\Events\SurveyFormCreated;
-use App\Http\Resources\SurveyFormResource;
-use App\Http\Resources\UserSurveyResource;
 use App\Models\SurveyForm;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Throwable;
 
-class SurveyFormService extends CommonService
+
+class SurveyFormService
 {
 
     /**
-     * @return JsonResponse
      * @throws FatalErrorException
      */
-    public function get(): JsonResponse
+    public function get(): User
     {
         try {
-            $data = User::auth()->load('surveyForm');
-
-            return response()->json(new UserSurveyResource($data), 200);
-//            return $this->formatter()->make(
-//                new UserSurveyResource($data),
-//                200
-//            );
+            return User::auth()->load('surveyForm');
         } catch (Throwable $e) {
             logger()->debug($e->getMessage() . $e->getLine() . ' ----- ' . $e->getFile());
             throw new FatalErrorException($e->getMessage());
@@ -36,11 +26,9 @@ class SurveyFormService extends CommonService
     }
 
     /**
-     * @param $data
-     * @return JsonResponse
      * @throws FatalErrorException
      */
-    public function store($data): JsonResponse
+    public function store($data): SurveyForm
     {
         try {
             $user = User::auth();
@@ -53,12 +41,8 @@ class SurveyFormService extends CommonService
 
             $user->surveyForm()->save($survey);
 
-            SurveyFormCreated::dispatch($survey);
-
-            return $this->formatter()->make(
-                new SurveyFormResource($survey),
-                201
-            );
+//            SurveyFormCreated::dispatch($survey);
+            return $survey;
         } catch (Throwable $e) {
             logger()->debug($e->getMessage() . $e->getLine() . ' ----- ' . $e->getFile());
             throw new FatalErrorException($e->getMessage());

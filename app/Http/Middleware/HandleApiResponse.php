@@ -2,23 +2,25 @@
 
 namespace App\Http\Middleware;
 
-use App\Api\Service\CommonService;
+use App\Api\Service\Formatter;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class HandleSuccessResponse
+class HandleApiResponse
 {
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
 
-        if ($response instanceof JsonResponse && $response->isSuccessful() && $request->expectsJson()) {
-            $data = $response->getData();
+        if ($response instanceof JsonResponse && $request->expectsJson() && $response->isSuccessful()) {
+
             $statusCode = $response->getStatusCode();
-            $common = new CommonService();
-            return $common->formatter()->make($data, $statusCode);
+
+            $data = $response->getData();
+            return Formatter::factory()->make($data, $statusCode);
+
         }
 
         return $response;

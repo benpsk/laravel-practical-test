@@ -3,52 +3,36 @@
 namespace App\Services;
 
 use App\Api\Exceptions\WrongCredentialException;
-use App\Api\Service\CommonService;
-use App\Http\Resources\UserResource;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 
-class AuthService extends CommonService
+class AuthService
 {
 
     /**
-     * @param $credentials
-     * @return JsonResponse
      * @throws WrongCredentialException
      */
-    public function login($credentials): JsonResponse
+    public function login($credentials): ?Authenticatable
     {
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
             $token = $user->createToken('auth-token')->plainTextToken;
-
-            return $this->formatter()
-                ->authResponse(
-                    $token,
-                    new UserResource($user)
-                );
+            $user->token = $token;
+            return $user;
         }
 
         throw new WrongCredentialException('Invalid credentials', 401);
 
     }
 
-    /**
-     * @param $data
-     * @return JsonResponse
-     */
-    public function store($data): JsonResponse
+    public function store($data): User
     {
-        $user = User::create([
+        return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
         ]);
-
-        return $this->formatter()
-        ->make(new UserResource($user), 201);
-
     }
 }

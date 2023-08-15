@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Api\Exceptions\WrongCredentialException;
+use App\Api\Service\Formatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,7 +31,11 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        return $this->service->login($credentials);
+        $user =  $this->service->login($credentials);
+
+        Formatter::factory()->setToken($user->token);
+
+        return response()->json(new UserResource($user));
     }
 
     /**
@@ -40,7 +46,9 @@ class AuthController extends Controller
     {
         $data = $request->only('name', 'email', 'password');
 
-        return $this->service->store($data);
+        $user =  $this->service->store($data);
+
+        return response()->json(new UserResource($user), 201);
     }
 
     /**
@@ -54,7 +62,6 @@ class AuthController extends Controller
         $user->tokens()->delete();
 
         $response = ['message' => 'logout successful.'];
-        return $this->service->formatter()
-        ->make($response, 200);
+        return response()->json($response);
     }
 }

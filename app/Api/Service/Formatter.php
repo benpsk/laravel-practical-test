@@ -65,6 +65,8 @@ class Formatter
     protected ?string $endpoint = null;
 
 
+    protected ?string $token = null;
+
     /**
      * Singleton
      *
@@ -90,40 +92,27 @@ class Formatter
      */
     public function make($data, $status = null): JsonResponse
     {
+        if ($status) $this->status = $status;
+
         $response = $this->defaultFormat();
+
+        if ($this->token) $response["token"] = $this->tokenInfo();
 
         $response["data"] = $data;
 
+
         return response()
-        ->json($response, $status ?? $this->status);
-    }
-
-
-    /**
-     * @param string $token
-     * @param $data
-     * @return JsonResponse
-     */
-    public function authResponse(string $token, $data = []): JsonResponse
-    {
-        $response = $this->defaultFormat();
-        $response["token"] = $this->tokenInfo($token);
-        if (!empty($data)) {
-            $response["data"] = $data;
-        }
-
-        return response()->json($response);
+        ->json($response, $this->status);
     }
 
     /**
-     * @param $token
      * @return array
      */
-    public function tokenInfo($token): array
+    public function tokenInfo(): array
     {
         return [
             "type" => "Bearer",
-            "access_token" => $token,
+            "access_token" => $this->token,
             "expired_at" => config('sanctum.expiration') * 60
         ];
     }
@@ -208,6 +197,12 @@ class Formatter
     public function setStatus(int $status): static
     {
         $this->status = $status;
+        return $this;
+    }
+
+    public function setToken(string $token): static
+    {
+        $this->token = $token;
         return $this;
     }
 
