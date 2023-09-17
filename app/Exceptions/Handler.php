@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Api\Exceptions\FatalErrorException;
 use App\Api\Exceptions\NotFoundException;
+use App\Api\Exceptions\UnauthorizedException;
 use App\Api\Exceptions\ValidationException;
 use App\Api\Exceptions\WrongCredentialException;
 use App\Api\Service\Formatter;
@@ -54,6 +55,10 @@ class Handler extends ExceptionHandler
     {
         $this->renderable(function (MethodNotAllowedHttpException $e) {
             return $this->handle($e->getMessage(), 405);
+        });
+
+        $this->renderable(function (UnauthorizedException $e) {
+            return $this->handle($e->getMessage(), 403);
         });
 
         $this->renderable(function (NotFoundException $e) {

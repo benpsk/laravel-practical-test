@@ -3,7 +3,6 @@
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\SurveyFormController;
 use App\Http\Controllers\Api\V1\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,7 +24,7 @@ Route::prefix('v1')->middleware('api.response')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
 
         Route::apiResource('user', UserController::class)->only('index');
-        Route::apiResource('survey', SurveyFormController::class)->only(['index', 'store']);
+        Route::apiResource('survey', SurveyFormController::class)->only(['index', 'store', 'show']);
 
         Route::post('logout', [AuthController::class, 'logout']);
     });

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Api\Exceptions\FatalErrorException;
+use App\Api\Exceptions\UnauthorizedException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Resources\SurveyFormResource;
 use App\Http\Resources\UserSurveyResource;
+use App\Models\SurveyForm;
 use App\Services\SurveyFormService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -41,12 +43,13 @@ class SurveyFormController extends Controller
         return response()->json(new SurveyFormResource($survey), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(SurveyForm $survey): JsonResponse
     {
-        //
+        if ($survey->user_id != auth()->user()->id) {
+            throw new UnauthorizedException("User not authorize!");
+        }
+
+        return response()->json(new SurveyFormResource($survey), 200);
     }
 
     /**
