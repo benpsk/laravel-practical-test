@@ -1,6 +1,10 @@
 name: Automated API tests using Postman CLI
 
-on: push
+on:
+  push:
+    branches: [ "v2" ]
+  pull_request:
+    branches: [ "v2" ]
 
 jobs:
   automated-api-tests:
