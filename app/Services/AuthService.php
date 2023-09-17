@@ -18,6 +18,8 @@ class AuthService
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
+            $user->tokens()->delete();
+
             $token = $user->createToken('auth-token')->plainTextToken;
             $user->token = $token;
             return $user;
@@ -29,7 +31,7 @@ class AuthService
 
     public function store($data): User
     {
-        return User::create([
+        return User::query()->create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
