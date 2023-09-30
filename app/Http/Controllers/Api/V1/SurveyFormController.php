@@ -12,6 +12,7 @@ use App\Models\SurveyForm;
 use App\Services\SurveyFormService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class SurveyFormController extends Controller
 {
@@ -27,10 +28,16 @@ class SurveyFormController extends Controller
      * Display a listing of the resource.
      * @throws FatalErrorException
      */
-    public function index(): JsonResponse
+    public function index()
     {
-        $data = $this->service->get();
-        return response()->json(new UserSurveyResource($data));
+        // check redis exist or not
+        $response = json_decode(Redis::get('survey_form'));
+        if (!$response) {
+            $data = $this->service->get();
+            $response = new UserSurveyResource($data);
+            Redis::setex('survey_form', 3600, json_encode($response));
+        }
+        return response()->json($response);
     }
 
     /**

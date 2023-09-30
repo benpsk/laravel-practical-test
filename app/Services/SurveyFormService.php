@@ -18,7 +18,10 @@ class SurveyFormService
     public function get(): User
     {
         try {
-            return User::auth()->load('surveyForm');
+            return User::where('id', auth()->user()->id)
+                ->with(['surveyForm' => function ($q) {
+                    $q->limit(10000);
+                }])->first();
         } catch (Throwable $e) {
             logger()->debug($e->getMessage() . $e->getLine() . ' ----- ' . $e->getFile());
             throw new FatalErrorException($e->getMessage());
