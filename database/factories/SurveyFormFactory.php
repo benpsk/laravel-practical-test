@@ -18,16 +18,12 @@ class SurveyFormFactory extends Factory
      */
     public function definition(): array
     {
-        // Get a random user ID from the existing user records
-        $userIds = User::pluck('id')->toArray();
-        $userId = $this->faker->randomElement($userIds);
-
         return [
             'name' => fake()->name(),
             'phone_no' => fake()->phoneNumber(),
             'dob' => fake()->date(),
             'gender' => rand(0, 1) == 1 ? 'Male' : 'Female',
-            'user_id' => $userId,
+            'user_id' => User::factory()
         ];
     }
 }
