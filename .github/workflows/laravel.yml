@@ -43,7 +43,6 @@ jobs:
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
-          REDIS_HOST: 127.0.0.1
+          REDIS_HOST: 0.0.0.0
           REDIS_PORT: 6379
-          REDIS_PASSWORD: null
         run: vendor/bin/pest
