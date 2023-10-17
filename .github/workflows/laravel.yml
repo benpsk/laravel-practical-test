@@ -1,20 +1,23 @@
 name: Laravel
-
 on:
   push:
-    branches: [ "v2" ]
+    branches: ["v2"]
   pull_request:
-    branches: [ "v2" ]
-
+    branches: ["v2"]
 jobs:
   laravel-tests:
-
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379/tcp
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+      - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: "8.1"
       - uses: actions/checkout@v3
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -29,9 +32,9 @@ jobs:
           mkdir -p database
           touch database/database.sqlite
       - name: Install Node.js and npm
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
       - name: Install npm dependencies
         run: npm install
       - name: Build assets
@@ -40,4 +43,5 @@ jobs:
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
+          REDIS_PORT: 6379
         run: vendor/bin/pest
