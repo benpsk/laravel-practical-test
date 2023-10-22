@@ -20,6 +20,7 @@
         "nunomaduro/collision": "^7.0",
         "pestphp/pest": "^2.10",
         "pestphp/pest-plugin-drift": "^2.2",
+        "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^10.0",
         "spatie/laravel-ignition": "^2.0"
     },
