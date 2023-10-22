@@ -59,14 +59,12 @@ class Formatter
      * @var string|null
      */
     protected ?string $endpoint = null;
-
-
     protected ?string $token = null;
-
     protected float $start = 0;
-
     protected int $end = 0;
+    protected array $fieldName;
 
+    protected array $fieldValue;
     /**
      * Singleton
      *
@@ -101,7 +99,7 @@ class Formatter
         $response["data"] = $data;
 
         return response()
-        ->json($response, $this->status);
+            ->json($response, $this->status);
     }
 
     /**
@@ -148,7 +146,6 @@ class Formatter
             "status" => $this->status,
             "meta" => $this->getMeta(),
         ];
-
     }
 
     /**

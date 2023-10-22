@@ -61,7 +61,7 @@ class User extends Authenticatable
      */
     public static function auth(): User
     {
-        return User::find(Auth::id());
+        return User::query()->find(Auth::id());
     }
 
     public function surveyForm()
