@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\SurveyForm;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,8 +15,7 @@ class SurveyFormResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // return parent::toArray($request);
-
+        /** @var SurveyForm $this */
         return [
             'id' => $this->id,
             'name' => $this->name,

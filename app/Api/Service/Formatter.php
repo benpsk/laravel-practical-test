@@ -50,7 +50,7 @@ class Formatter
 
 
     /**
-     * @var
+     * @var self
      */
     public static $instance;
 

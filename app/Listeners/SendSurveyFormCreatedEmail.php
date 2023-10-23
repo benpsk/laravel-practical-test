@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use App\Events\SurveyFormCreated;
 use App\Mail\SendEmail;
+use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
 
@@ -17,7 +17,7 @@ class SendSurveyFormCreatedEmail implements ShouldQueue
      *
      * @var int
      */
-    public $tries = 1;
+    public int $tries = 1;
 
     /**
      * Create the event listener.
@@ -32,8 +32,8 @@ class SendSurveyFormCreatedEmail implements ShouldQueue
      */
     public function handle(SurveyFormCreated $event): void
     {
+        /** @var User $user */
         $user = $event->surveyForm->user;
-
         Mail::to($user->email)
             ->send(new SendEmail($event->surveyForm));
     }

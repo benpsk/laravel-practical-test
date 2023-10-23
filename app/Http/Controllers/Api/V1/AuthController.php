@@ -30,11 +30,10 @@ class AuthController extends Controller
     public function login(LoginUserRequest $request): JsonResponse
     {
         $credentials = $request->only('email', 'password');
-
         $user =  $this->service->login($credentials);
-
-        Formatter::factory()->setToken($user->token);
-
+        if (!empty($user->token)) {
+            Formatter::factory()->setToken(token: $user->token);
+        }
         return response()->json(new UserResource($user));
     }
 

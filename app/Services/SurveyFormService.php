@@ -3,9 +3,10 @@
 namespace App\Services;
 
 use App\Api\Exceptions\FatalErrorException;
-use App\Events\SurveyFormCreated;
 use App\Models\SurveyForm;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Throwable;
 
 
@@ -15,10 +16,10 @@ class SurveyFormService
     /**
      * @throws FatalErrorException
      */
-    public function get(): User
+    public function get(): Builder|Model
     {
         try {
-            return User::where('id', auth()->user()->id)
+            return User::query()->where('id', auth()->user()->id)
                 ->with(['surveyForm' => function ($q) {
                     $q->limit(10000);
                 }])->first();
@@ -42,6 +43,7 @@ class SurveyFormService
                 'dob' => $data['dob'] ?? null
             ]);
 
+            /** @var User $user */
             $user->surveyForm()->save($survey);
 
 //            SurveyFormCreated::dispatch($survey);

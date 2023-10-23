@@ -11,22 +11,20 @@ class AuthService
 {
 
     /**
+     * @param array $credentials
+     * @return Authenticatable|null
      * @throws WrongCredentialException
      */
-    public function login($credentials): ?Authenticatable
+    public function login(array $credentials): ?Authenticatable
     {
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-
             $user->tokens()->delete();
-
-            $token = $user->createToken('auth-token')->plainTextToken;
-            $user->token = $token;
+            $user->token = $user->createToken('auth-token')->plainTextToken;
             return $user;
         }
 
         throw new WrongCredentialException('Invalid credentials', 401);
-
     }
 
     public function store($data): User
