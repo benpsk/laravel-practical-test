@@ -18,6 +18,7 @@
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
+        "nunomaduro/larastan": "^2.0",
         "pestphp/pest": "^2.10",
         "pestphp/pest-plugin-drift": "^2.2",
         "phpstan/phpstan": "^1.10",
