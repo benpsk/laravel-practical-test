@@ -18,7 +18,7 @@ class StoreUserRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array{name: string, email: string, password: array{0: string, 1: string, 2: Password}}
      */
     public function rules(): array
     {

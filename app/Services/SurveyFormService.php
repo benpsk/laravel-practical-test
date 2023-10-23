@@ -30,22 +30,22 @@ class SurveyFormService
     }
 
     /**
+     * @param array<mixed> $data
+     * @return SurveyForm
      * @throws FatalErrorException
      */
-    public function store($data): SurveyForm
+    public function store(array $data): SurveyForm
     {
         try {
-            $user = User::auth();
+            $user = request()->user();
             $survey = new SurveyForm([
                 'name' => $data['name'],
                 'phone_no' => $data['phone_no'],
                 'gender' => $data['gender'] ?? null,
                 'dob' => $data['dob'] ?? null
             ]);
-
             /** @var User $user */
             $user->surveyForm()->save($survey);
-
 //            SurveyFormCreated::dispatch($survey);
             return $survey;
         } catch (Throwable $e) {

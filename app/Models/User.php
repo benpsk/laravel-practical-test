@@ -2,16 +2,11 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -59,21 +54,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    /**
-     * @param $pass
-     */
-    public function setPasswordAttribute($pass): void
+    public function setPasswordAttribute(string $pass): void
     {
         $this->attributes['password'] = bcrypt($pass);
-    }
-
-    /**
-     * @return Builder|Collection|Model|Builder[]
-     */
-    public static function auth(): Builder|array|Collection|Model
-    {
-        return User::query()->find(Auth::id());
     }
 
     public function surveyForm(): HasMany

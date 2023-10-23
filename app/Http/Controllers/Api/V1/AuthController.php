@@ -44,9 +44,7 @@ class AuthController extends Controller
     public function store(StoreUserRequest $request): JsonResponse
     {
         $data = $request->only('name', 'email', 'password');
-
         $user =  $this->service->store($data);
-
         return response()->json(new UserResource($user), 201);
     }
 

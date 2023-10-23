@@ -102,8 +102,7 @@ class Handler extends ExceptionHandler
             return $this->handle($e->getMessage(), 500);
         });
     }
-
-    private function handle($message, $code): bool|JsonResponse
+    private function handle(string $message, int $code): bool|JsonResponse
     {
         if (request()->wantsJson()) {
             $error = Formatter::factory()->makeErrorException($message, $code);

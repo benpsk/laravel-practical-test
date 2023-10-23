@@ -21,7 +21,7 @@ class HandleApiResponse
         }
         return $response;
     }
-    protected function isApi($request, $response): bool
+    protected function isApi(Request $request, JsonResponse|null $response): bool
     {
         return $response instanceof JsonResponse &&
             $request->expectsJson() &&

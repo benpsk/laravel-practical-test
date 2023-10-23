@@ -11,7 +11,6 @@ use App\Http\Resources\UserSurveyResource;
 use App\Models\SurveyForm;
 use App\Services\SurveyFormService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
 class SurveyFormController extends Controller
@@ -28,7 +27,7 @@ class SurveyFormController extends Controller
      * Display a listing of the resource.
      * @throws FatalErrorException
      */
-    public function index()
+    public function index(): JsonResponse
     {
         // check redis exist or not
         $response = json_decode(Redis::get('survey_form'));
@@ -50,28 +49,15 @@ class SurveyFormController extends Controller
         return response()->json(new SurveyFormResource($survey), 201);
     }
 
+    /**
+     * @throws UnauthorizedException
+     */
     public function show(SurveyForm $survey): JsonResponse
     {
         if ($survey->user_id != auth()->user()->id) {
             throw new UnauthorizedException("User not authorize!");
         }
 
-        return response()->json(new SurveyFormResource($survey), 200);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json(new SurveyFormResource($survey));
     }
 }

@@ -29,11 +29,6 @@ class Formatter
     protected string $message;
 
     /**
-     * @var array
-     */
-    protected array $meta = [];
-
-    /**
      * @var int
      */
     protected int $limit = 30;
@@ -52,7 +47,7 @@ class Formatter
     /**
      * @var self
      */
-    public static $instance;
+    public static self $instance;
 
 
     /**
@@ -62,9 +57,6 @@ class Formatter
     protected ?string $token = null;
     protected float $start = 0;
     protected int $end = 0;
-    protected array $fieldName;
-
-    protected array $fieldValue;
     /**
      * Singleton
      *
@@ -83,12 +75,7 @@ class Formatter
         return self::$instance;
     }
 
-    /**
-     * @param $data
-     * @param $status
-     * @return JsonResponse
-     */
-    public function make($data, $status = null): JsonResponse
+    public function make(string $data, int|null $status = null): JsonResponse
     {
         if ($status) $this->status = $status;
 
@@ -103,7 +90,7 @@ class Formatter
     }
 
     /**
-     * @return array
+     * @return array{type: string, access_token: null|string, expired_at: float|int}
      */
     public function tokenInfo(): array
     {
@@ -135,9 +122,8 @@ class Formatter
         return $endpoint;
     }
 
-
     /**
-     * @return array
+     * @return array<mixed>
      */
     protected function defaultFormat(): array
     {
@@ -149,7 +135,7 @@ class Formatter
     }
 
     /**
-     * @return array
+     * @return array{method: string, endpoint: string, duration: float}
      */
     public function getMeta(): array
     {
@@ -167,22 +153,18 @@ class Formatter
     }
 
     /**
-     * @param $exception
-     * @param $code
-     * @return array
+     * @return array<mixed>
      */
-    public function makeErrorException($exception, $code): array
+    public function makeErrorException(string $exception, int $code): array
     {
         $this->success = 0;
         $this->status = 500;
-        if (max((int)$code, 0)) :
-            $this->status = (int) $code;
+        if (max($code, 0)) :
+            $this->status = $code;
         endif;
-
         $response = $this->defaultFormat();
         $error = json_decode($exception);
-
-        if (is_string($exception) && json_last_error() == JSON_ERROR_NONE) :
+        if (json_last_error() == JSON_ERROR_NONE) :
             $response["errors"] = $error;
         else :
             $response["errors"] = [
@@ -191,16 +173,6 @@ class Formatter
         endif;
 
         return $response;
-    }
-
-    /**
-     * @param int $status
-     * @return $this
-     */
-    public function setStatus(int $status): static
-    {
-        $this->status = $status;
-        return $this;
     }
 
     public function setStart(float $start): static
@@ -216,18 +188,4 @@ class Formatter
     }
 
 
-    /**
-     * @param $fields
-     * @return $this
-     */
-    public function extraField($fields =  []): static
-    {
-        $i = 0;
-        foreach ($fields as $key => $value) {
-            $this->fieldName[$i] = $key;
-            $this->fieldValue[$i] = $value;
-            $i++;
-        }
-        return $this;
-    }
 }

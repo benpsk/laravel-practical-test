@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\In;
 
 class StoreSurveyRequest extends FormRequest
 {
@@ -19,7 +20,7 @@ class StoreSurveyRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array{name: string, phone_no: array{0: string}, gender: array{0: string, 1: In}, dob: array{0: string, 1: string, 2: string}}
      */
     public function rules(): array
     {

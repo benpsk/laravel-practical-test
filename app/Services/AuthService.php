@@ -9,13 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthService
 {
-
     /**
-     * @param array $credentials
-     * @return Authenticatable|null
+     * @param array<mixed> $credentials
+     * @return Authenticatable
      * @throws WrongCredentialException
      */
-    public function login(array $credentials): ?Authenticatable
+    public function login(array $credentials): Authenticatable
     {
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
@@ -27,7 +26,11 @@ class AuthService
         throw new WrongCredentialException('Invalid credentials', 401);
     }
 
-    public function store($data): User
+    /**
+     * @param array<mixed> $data
+     * @return User
+     */
+    public function store(array $data): User
     {
         return User::query()->create([
             'name' => $data['name'],
