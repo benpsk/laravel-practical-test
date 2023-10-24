@@ -76,7 +76,8 @@ class Handler extends ExceptionHandler
         });
 
         $this->renderable(function (ValidationValidationException $e) {
-            return $this->handle(json_encode($e->errors()), 422);
+            $error = json_encode($e->errors()) ?  json_encode($e->errors()) : 'Validation error';
+            return $this->handle($error, 422);
         });
         $this->renderable(function (WrongCredentialException $e) {
             return $this->handle($e->getMessage(), 401);
