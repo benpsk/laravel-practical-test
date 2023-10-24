@@ -4,6 +4,7 @@ namespace App\Api\Service;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Request;
+use stdClass;
 
 class Formatter
 {
@@ -47,7 +48,7 @@ class Formatter
     /**
      * @var self
      */
-    public static self $instance;
+    public static $instance;
 
 
     /**
@@ -75,7 +76,7 @@ class Formatter
         return self::$instance;
     }
 
-    public function make(string $data, int|null $status = null): JsonResponse
+    public function make(stdClass $data, int|null $status = null): JsonResponse
     {
         if ($status) $this->status = $status;
 
