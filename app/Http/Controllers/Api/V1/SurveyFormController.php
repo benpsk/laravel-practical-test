@@ -20,7 +20,8 @@ class SurveyFormController extends Controller
      */
     public function __construct(
         protected SurveyFormService $service
-    ) {
+    )
+    {
     }
 
     /**
@@ -29,14 +30,12 @@ class SurveyFormController extends Controller
      */
     public function index(): JsonResponse
     {
-        // check redis exist or not
         $data = Redis::get('survey_form');
-        $response = json_decode($data);
+        $response = $data ? json_decode($data) : null;
         if (!$response) {
             $data = $this->service->get();
             $response = new UserSurveyResource($data);
-
-            Redis::setex('survey_form', 3600, json_encode($response));
+            Redis::setex('survey_form', 3600, (string) json_encode($response));
         }
         return response()->json($response);
     }
