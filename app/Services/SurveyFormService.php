@@ -16,10 +16,11 @@ class SurveyFormService
     /**
      * @throws FatalErrorException
      */
-    public function get(): Builder|Model
+    public function get(): Builder|Model|User|null
     {
         try {
-            return User::query()->where('id', auth()->user()->id)
+            return User::query()
+                ->where('id', auth()->user()->id ?? null)
                 ->with(['surveyForm' => function ($q) {
                     $q->limit(10000);
                 }])->first();

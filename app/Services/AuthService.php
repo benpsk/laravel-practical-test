@@ -11,14 +11,17 @@ class AuthService
 {
     /**
      * @param array<mixed> $credentials
-     * @return Authenticatable
+     * @return ?Authenticatable
      * @throws WrongCredentialException
      */
-    public function login(array $credentials): Authenticatable
+    public function login(array $credentials): ?Authenticatable
     {
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $user->tokens()->delete();
+            if (!empty($user->token)) {
+                $user->tokens()->delete();
+            }
+            /** @var User $user */
             $user->token = $user->createToken('auth-token')->plainTextToken;
             return $user;
         }

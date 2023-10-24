@@ -55,7 +55,7 @@ class SurveyFormController extends Controller
      */
     public function show(SurveyForm $survey): JsonResponse
     {
-        if ($survey->user_id != auth()->user()->id) {
+        if (auth()->user() && $survey->user_id != auth()->user()->id) {
             throw new UnauthorizedException("User not authorize!");
         }
 
