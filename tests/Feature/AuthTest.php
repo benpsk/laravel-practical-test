@@ -56,7 +56,8 @@ test('user fail register', function () {
     $this->json('POST', 'api/v1/register', $data)
         ->assertStatus(422);
 
-    expect([
+    expect(
+        [
             "errors" => [
                 "email" => [
                     "The email field must be a valid email address."
@@ -87,9 +88,10 @@ test('user can logout', function () {
     Sanctum::actingAs($user);
 
     $this->json('POST', 'api/v1/logout')
-    ->assertStatus(200);
+        ->assertStatus(200);
 
-    expect([
+    expect(
+        [
             "data" => ["message" => "logout successful."]
         ]
     )->toBeArray();

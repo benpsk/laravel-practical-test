@@ -46,7 +46,8 @@ class SurveyFormController extends Controller
      */
     public function store(StoreSurveyRequest $request): JsonResponse
     {
-        $survey = $this->service->store($request->validated());
+        $data = (array) $request->validated();
+        $survey = $this->service->store($data);
         return response()->json(new SurveyFormResource($survey), 201);
     }
 
