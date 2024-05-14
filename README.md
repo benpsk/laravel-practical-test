@@ -23,7 +23,7 @@ To enable email notifications, it is necessary to configure a queue for the asso
     "meta": {
         "method": "get",
         "endpoint": "api/v1/user",
-        "duration": 7.01
+        "duration": 5.01
     },
     "data": {
         "id": 21,
@@ -43,7 +43,7 @@ To enable email notifications, it is necessary to configure a queue for the asso
     "meta": {
         "method": "post",
         "endpoint": "api/v1/login",
-        "duration": 7.01
+        "duration": 4.32
     },
     "errors": {
         "message": "Invalid credentials"
@@ -57,7 +57,7 @@ To enable email notifications, it is necessary to configure a queue for the asso
     "meta": {
         "method": "post",
         "endpoint": "api/v1/register",
-        "duration": 7.01
+        "duration": 3.91
     },
     "errors": {
         "email": [
@@ -94,7 +94,7 @@ Authentication      Not Required
     "meta": {
         "method": "post",
         "endpoint": "api/v1/register",
-        "duration": 7.01
+        "duration": 2.88
     },
     "data": {
         "id": 21,
@@ -129,7 +129,7 @@ Authentication      Not Required
     "meta": {
         "method": "post",
         "endpoint": "api/v1/login",
-        "duration": 7.01
+        "duration": 4.33
     },
     "token": {
         "type": "Bearer",
@@ -163,7 +163,7 @@ Authentication      Required
     "meta": {
         "method": "post",
         "endpoint": "api/v1/logout",
-        "duration": 7.01
+        "duration": 2.01
     },
     "data": {
         "message": "logout successful."
@@ -187,7 +187,7 @@ Parameters -
     "meta": {
         "method": "get",
         "endpoint": "api/v1/user",
-        "duration": 7.01
+        "duration": 3.07
     },
     "data": {
         "id": 21,
@@ -223,7 +223,7 @@ Authentication      Required
     "meta": {
         "method": "post",
         "endpoint": "api/v1/survey",
-        "duration": 7.01
+        "duration": 4.65
     },
     "data": {
         "id": 103,
@@ -253,7 +253,7 @@ Parameters -
     "meta": {
         "method": "get",
         "endpoint": "api/v1/survey",
-        "duration": 7.01
+        "duration": 4.78
     },
     "data": {
         "id": 21,
