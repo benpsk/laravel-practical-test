@@ -30,13 +30,8 @@ class SurveyFormController extends Controller
      */
     public function index(): JsonResponse
     {
-        $data = Redis::get('survey_form');
-        $response = $data ? json_decode($data) : null;
-        if (!$response) {
-            $data = $this->service->get();
-            $response = new UserSurveyResource($data);
-            Redis::setex('survey_form', 3600, (string) json_encode($response));
-        }
+        $data = $this->service->get();
+        $response = new UserSurveyResource($data);
         return response()->json($response);
     }
 
